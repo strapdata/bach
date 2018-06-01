@@ -191,14 +191,13 @@ function perform_sanity_checks() {
 function determine_url() {
     local DOWNLOAD='https://download.java.net/java'
     local ORACLE='http://download.oracle.com/otn-pub/java/jdk'
-    local LEGACY='http://download.oracle.com/otn/java/jdk'
     local FORAX='http://igm.univ-mlv.fr/~forax/tmp/jdk'
 
     # Very old JDK?
     case "${feature}-${os}" in
       5-linux-x64) url="${FORAX}/jdk1.5.0_22.tar.gz"; return;;
       6-linux-x64) url="${FORAX}/jdk-6u45-linux-x64.tar.gz"; return;;
-      7-linux-x64) url="${LEGACY}/7u80-b15/jdk-7u80-linux-x64.tar.gz"; return;;
+      7-linux-x64) url="${FORAX}/jdk-7u80-linux-x64.tar.gz"; return;;
       8-linux-x64) url="${ORACLE}/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz"; return;;
     esac
 
