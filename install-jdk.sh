@@ -264,7 +264,11 @@ function download_and_extract_and_set_target() {
 
     say "Downloading JDK from ${url}..."
     verbose "Using wget options: ${wget_options}"
-    wget ${wget_options} --header "Cookie: oraclelicense=accept-securebackup-cookie" ${url}
+    if [[ ${url} != *"oracle.com"* ]]; then
+        wget ${wget_options} ${url}
+    else
+        wget ${wget_options} --header "Cookie: oraclelicense=accept-securebackup-cookie" ${url}
+    fi
 
     verbose "Using tar options: ${tar_options}"
     if [[ ${target} == '?' ]]; then
