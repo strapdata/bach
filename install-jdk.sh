@@ -37,6 +37,9 @@ function initialize() {
     workspace="${HOME}"
     target='?'
     cacerts=false
+    resurrect=false
+    oldest_jdk=9
+    latest_jdk=?
 }
 
 function usage() {
@@ -147,6 +150,11 @@ function parse_options() {
                 cacerts=true
                 verbose "Linking system CA certificates"
                 ;;
+            --resurrect)
+                resurrect=true
+                oldest_jdk=5
+                verbose "Resurrecting dead JDKs at your risk..."
+                ;;
             *)
                 script_exit "Invalid argument was provided: ${option}" 2
                 ;;
@@ -180,8 +188,8 @@ function perform_sanity_checks() {
     if [[ ${feature} == '?' ]] || [[ ${feature} == 'ea' ]]; then
         feature=${latest_jdk}
     fi
-    if [[ ${feature} -lt 5 ]] || [[ ${feature} -gt ${latest_jdk} ]]; then
-        script_exit "Expected feature release number in range of 5 to ${latest_jdk}, but got: ${feature}" 3
+    if [[ ${feature} -lt ${oldest_jdk} ]] || [[ ${feature} -gt ${latest_jdk} ]]; then
+        script_exit "Expected feature release number in range of ${oldest_jdk} to ${latest_jdk}, but got: ${feature}" 3
     fi
     if [[ -d "$target" ]]; then
         script_exit "Target directory must not exist, but it does: $(du -hs '${target}')" 3
@@ -193,13 +201,15 @@ function determine_url() {
     local ORACLE='http://download.oracle.com/otn-pub/java/jdk'
     local FORAX='http://igm.univ-mlv.fr/~forax/tmp/jdk'
 
-    # Very old JDK?
-    case "${feature}-${os}" in
-      5-linux-x64) url="${FORAX}/jdk1.5.0_22.tar.gz"; return;;
-      6-linux-x64) url="${FORAX}/jdk-6u45-linux-x64.tar.gz"; return;;
-      7-linux-x64) url="${FORAX}/jdk-7u80-linux-x64.tar.gz"; return;;
-      8-linux-x64) url="${ORACLE}/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz"; return;;
-    esac
+    # Support dead JDKs?
+    if [[ ${resurrect} != true ]]; then
+        case "${feature}-${os}" in
+            5-linux-x64) url="${FORAX}/jdk1.5.0_22.tar.gz"; return;;
+            6-linux-x64) url="${FORAX}/jdk-6u45-linux-x64.tar.gz"; return;;
+            7-linux-x64) url="${FORAX}/jdk-7u80-linux-x64.tar.gz"; return;;
+            8-linux-x64) url="${ORACLE}/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz"; return;;
+        esac
+    fi
 
     # Archived feature or official build with BCL license?
     case "${feature}-${license}" in
