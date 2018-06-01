@@ -264,11 +264,7 @@ function download_and_extract_and_set_target() {
 
     say "Downloading JDK from ${url}..."
     verbose "Using wget options: ${wget_options}"
-    if [[ ${license} == 'GPL' ]]; then
-        wget ${wget_options} ${url}
-    else
-        wget ${wget_options} --header "Cookie: oraclelicense=accept-securebackup-cookie" ${url}
-    fi
+    wget ${wget_options} --header "Cookie: oraclelicense=accept-securebackup-cookie" ${url}
 
     verbose "Using tar options: ${tar_options}"
     if [[ ${target} == '?' ]]; then
@@ -321,7 +317,7 @@ function main() {
     export JAVA_HOME=$(cd "${target}"; pwd)
     export PATH=${JAVA_HOME}/bin:$PATH
 
-    if [[ ${silent} == false ]]; then java --version; fi
+    if [[ ${silent} == false ]]; then java -version; fi
     if [[ ${emit_java_home} == true ]]; then echo "${JAVA_HOME}"; fi
 }
 
