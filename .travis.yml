@@ -1,27 +1,36 @@
 sudo: false
-dist: trusty
 language: java
 
-os:
-- linux
-- osx
+before_install:
+- unset -v _JAVA_OPTIONS
 
 before_install:
-# https://github.com/travis-ci/travis-ci/issues/8408
-- unset -v _JAVA_OPTIONS
-# https://github.com/travis-ci/travis-ci/issues/8703
-- unset -f cd
+  - wget https://github.com/sormuras/bach/raw/support-older-jdks/install-jdk.sh
 
-install:
-- . ./install-jdk.sh --verbose
+matrix:
+  include:
+    - env: JDK='JDK 5'
+      install: . ./install-jdk.sh --feature 5
+
+    - env: JDK='JDK 6'
+      install: . ./install-jdk.sh --feature 6
+
+    - env: JDK='JDK 7'
+      install: . ./install-jdk.sh --feature 7
+
+    - env: JDK='JDK 8'
+      install: . ./install-jdk.sh --feature 8
+
+    - env: JDK='JDK 9'
+      install: . ./install-jdk.sh --feature 9
+
+    - env: JDK='JDK 10'
+      install: . ./install-jdk.sh --feature 10
+
+    - env: JDK='JDK 11'
+      install: . ./install-jdk.sh --feature 11
 
 script:
-- java --version
-- ./build.jsh
-
-after_success:
-- cd $TRAVIS_BUILD_DIR/demo/00-bootstrap
-- ./bootstrap.jsh
-
-- cd $TRAVIS_BUILD_DIR/demo/01-hello-world
-- ./build-01-hello-world.jsh
+- echo PATH = ${PATH}
+- echo JAVA_HOME = ${JAVA_HOME}
+- java -version
