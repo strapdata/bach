@@ -201,8 +201,8 @@ function determine_url() {
     local ORACLE='http://download.oracle.com/otn-pub/java/jdk'
     local FORAX='http://igm.univ-mlv.fr/~forax/tmp/jdk'
 
-    # Support dead JDKs?
-    if [[ ${resurrect} != true ]]; then
+    # Support dead JDK enabled?
+    if [[ ${resurrect} == true ]]; then
         case "${feature}-${os}" in
             5-linux-x64) url="${FORAX}/jdk1.5.0_22.tar.gz"; return;;
             6-linux-x64) url="${FORAX}/jdk-6u45-linux-x64.tar.gz"; return;;
