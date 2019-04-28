@@ -192,7 +192,7 @@ function perform_sanity_checks() {
 }
 
 function determine_url() {
-    local DOWNLOAD='https://download.java.net/java'
+    local DOWNLOAD='https://download.oracle.com/java'
     local ORACLE='http://download.oracle.com/otn-pub/java/jdk'
 
     # Archived feature or official GA build?
